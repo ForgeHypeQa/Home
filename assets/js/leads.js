@@ -1,7 +1,7 @@
 /* Lead tools on their own pages: the free check form and the Growth Score quiz.
    Both save to the ForgeHype leads Google Sheet (assets/leads-sheet.gs) through LEADS_URL. Empty = nothing is sent. */
 (() => {
-  const LEADS_URL = '';   // keep in sync with LEADS_URL in main.js
+  const LEADS_URL = 'https://script.google.com/macros/s/AKfycbxj8_qcc2A8HBLOF_p7GYVW9iRBQZ4ldqa_-jm75wajHEmQCIbKksbXXIum7D-wcdah/exec';   // keep in sync with LEADS_URL in main.js
   const send = fields => {
     if (!LEADS_URL || fields.botcheck) return;
     const body = new URLSearchParams({ ...fields, page: location.pathname });

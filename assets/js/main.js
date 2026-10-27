@@ -583,7 +583,7 @@
 
   /* ================= 14. FORM → GOOGLE SHEET + WHATSAPP ================= */
   /* LEADS_URL: the Apps Script web-app URL (ends in /exec) from assets/leads-sheet.gs. Empty = WhatsApp hand-off only. */
-  const LEADS_URL = '';
+  const LEADS_URL = 'https://script.google.com/macros/s/AKfycbxj8_qcc2A8HBLOF_p7GYVW9iRBQZ4ldqa_-jm75wajHEmQCIbKksbXXIum7D-wcdah/exec';
   const sendLead = fields => {
     if (!LEADS_URL || fields.botcheck) return;
     const body = new URLSearchParams({ ...fields, page: location.pathname + location.hash });
