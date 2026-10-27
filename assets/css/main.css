@@ -1477,3 +1477,6 @@ html.fm-lock,html.fm-lock body{overflow:hidden}
 .fixes-quiz-btn b{font-size:1.05rem;color:#f4efe9}
 .fixes-quiz-btn:hover,.fixes-quiz-btn:focus-visible{transform:translateY(-2px);border-color:var(--accent)}
 @media (max-width:520px){.fixes-quiz-btn{border-radius:22px;padding:14px 20px}}
+/* Privacy Policy links in consent lines and the cookie notice: always underlined */
+.consent-lbl a,.consent a{display:inline;border-bottom:0;padding:0;color:#f4efe9;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.consent-lbl a:hover,.consent a:hover,.consent-lbl a:focus-visible,.consent a:focus-visible{color:var(--accent)}
