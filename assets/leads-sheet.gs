@@ -31,7 +31,7 @@ function doPost(e) {
     const src = s(p.source);
     if (src === 'Free check' || src === 'Growth Score') {
       const t = sheet(ss, 'Lead tools', H_TOOLS);
-      t.appendRow([now, src, s(p.type), s(p.website), s(p.whatsapp), s(p.email), s(p.online), p.consent ? 'Yes' : 'No', s(p.page), 'New', '', '']);
+      t.appendRow([now, src, c(p.type), c(p.website), c(p.whatsapp), c(p.email), c(p.online), p.consent ? 'Yes' : 'No', c(p.page), 'New', '', '']);
       MailApp.sendEmail({ to: ALERT_TO, name: FROM_NAME, subject: src + ': ' + (s(p.website) || s(p.type)),
         body: ['New ' + src.toUpperCase() + ' lead from the website', '', 'Business type / score: ' + s(p.type), 'Website / company: ' + s(p.website),
           'WhatsApp: ' + s(p.whatsapp), 'Email: ' + s(p.email), 'Details: ' + s(p.online), '',
@@ -44,14 +44,14 @@ function doPost(e) {
     const sh = sheet(ss, audit ? 'Audits' : 'Bookings', audit ? H_AUDIT : H_BOOK);
     let subject, body;
     if (audit) {
-      sh.appendRow([now, s(p.type), s(p.website), s(p.whatsapp), s(p.email), s(p.online), p.consent ? 'Yes' : 'No', s(p.page), 'New', '', '']);
+      sh.appendRow([now, c(p.type), c(p.website), c(p.whatsapp), c(p.email), c(p.online), p.consent ? 'Yes' : 'No', c(p.page), 'New', '', '']);
       subject = 'Website audit request: ' + (s(p.website) || s(p.type));
       body = ['New FREE WEBSITE AUDIT request', '', 'Business type: ' + s(p.type), 'Website: ' + s(p.website),
         'WhatsApp: ' + s(p.whatsapp), 'Email: ' + s(p.email), '', 'What is not working: ' + s(p.online),
         '', 'Next: review, send the report, then book the meeting.', 'Sheet: ' + ss.getUrl()].join('\n');
       if (s(p.email)) autoReply(s(p.email), s(p.website) || s(p.type));
     } else {
-      sh.appendRow([now, s(p.type), s(p.interests), s(p.website), s(p.message), p.consent ? 'Yes' : 'No', s(p.page), 'New', '']);
+      sh.appendRow([now, c(p.type), c(p.interests), c(p.website), c(p.message), p.consent ? 'Yes' : 'No', c(p.page), 'New', '']);
       subject = 'Booking request: ' + s(p.type);
       body = ['New CONSULTATION booking from the website (the visitor was sent to WhatsApp)', '', 'Business type: ' + s(p.type), 'Interests: ' + s(p.interests),
         'Website: ' + s(p.website), 'Notes: ' + s(p.message), '', 'Sheet: ' + ss.getUrl()].join('\n');
@@ -92,4 +92,7 @@ function sheet(ss, name, headers) {
   return sh;
 }
 function s(v) { return v == null ? '' : String(v).slice(0, 3000); }
+/* for sheet cells only: a leading apostrophe keeps values such as +974 numbers as plain text
+   and stops anything starting with = + - @ from being read as a formula */
+function c(v) { const t = s(v); return /^[=+\-@]/.test(t) ? "'" + t : t; }
 function out(obj) { return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON); }
