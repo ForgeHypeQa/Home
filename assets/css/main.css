@@ -1469,3 +1469,11 @@ html.fm-lock,html.fm-lock body{overflow:hidden}
   .fm-box{width:100%;max-height:92svh;border-radius:24px 24px 0 0;padding:var(--s-4) var(--s-4) calc(var(--s-5) + env(safe-area-inset-bottom))}
   @keyframes fmIn{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 }
+
+/* Growth Score prompt after the six fix cards */
+.fixes-quiz{display:flex;justify-content:center;padding:clamp(28px,5vw,56px) 0 clamp(8px,2vw,16px);position:relative;z-index:2}
+.fixes-quiz-btn{display:inline-flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:16px 26px;border-radius:999px;background:#141110;color:#f4efe9;border:1px solid rgba(232,118,46,.55);text-decoration:none;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:transform .2s,border-color .2s}
+.fixes-quiz-btn span{font-size:.92rem;color:#c9c0b7}
+.fixes-quiz-btn b{font-size:1.05rem;color:#f4efe9}
+.fixes-quiz-btn:hover,.fixes-quiz-btn:focus-visible{transform:translateY(-2px);border-color:var(--accent)}
+@media (max-width:520px){.fixes-quiz-btn{border-radius:22px;padding:14px 20px}}
