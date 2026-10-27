@@ -74,15 +74,45 @@ function autoReply(to, name) {
     '3. We invite you to a short meeting to go through it together and agree the next step.', '',
     'If you want to add anything in the meantime, reply to this email or message us on WhatsApp: +974 7006 9544.', '',
     'ForgeHype', 'Website design and digital growth consultancy, Doha', 'forgehype.qa'].join('\n');
-  MailApp.sendEmail({ to: to, subject: subject, body: body, name: FROM_NAME, replyTo: ALERT_TO });
+  sendReply(to, subject, body);
 }
 
 function checkReply(to, link) {
-  MailApp.sendEmail({ to: to, name: FROM_NAME, replyTo: ALERT_TO, subject: 'Your free website check is on its way',
-    body: ['Hi,', '', 'Thanks for asking ForgeHype to check ' + link + '.', '',
+  sendReply(to, 'Your free website check is on its way',
+    ['Hi,', '', 'Thanks for asking ForgeHype to check ' + link + '.', '',
       'Within 48 hours we will send you a short report showing the three biggest things costing you customers, and what to fix first.', '',
-      'Questions in the meantime? Reply to this email or WhatsApp us: +974 7006 9544.', '', 'ForgeHype', 'Website design and digital growth consultancy, Doha', 'forgehype.qa'].join('\n') });
+      'Questions in the meantime? Reply to this email or WhatsApp us: +974 7006 9544.', '', 'ForgeHype', 'Website design and digital growth consultancy, Doha', 'forgehype.qa'].join('\n'));
 }
+
+/* Replies to visitors go out from info@forgehype.qa through Microsoft 365 (Microsoft Graph).
+   Needs four Script Properties (Project Settings > Script Properties), never written in this file:
+     M365_TENANT_ID, M365_CLIENT_ID, M365_CLIENT_SECRET, M365_SENDER (info@forgehype.qa)
+   If they are missing or Microsoft refuses, the reply falls back to Gmail so the visitor still gets it. */
+function sendReply(to, subject, body) {
+  const pr = PropertiesService.getScriptProperties();
+  const tenant = pr.getProperty('M365_TENANT_ID'), id = pr.getProperty('M365_CLIENT_ID'),
+        secret = pr.getProperty('M365_CLIENT_SECRET'), sender = pr.getProperty('M365_SENDER');
+  if (tenant && id && secret && sender) {
+    try {
+      const tok = JSON.parse(UrlFetchApp.fetch('https://login.microsoftonline.com/' + tenant + '/oauth2/v2.0/token', {
+        method: 'post', muteHttpExceptions: true,
+        payload: { client_id: id, client_secret: secret, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }
+      }).getContentText()).access_token;
+      const r = UrlFetchApp.fetch('https://graph.microsoft.com/v1.0/users/' + encodeURIComponent(sender) + '/sendMail', {
+        method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+        headers: { Authorization: 'Bearer ' + tok },
+        payload: JSON.stringify({ message: { subject: subject, body: { contentType: 'Text', content: body },
+          toRecipients: [{ emailAddress: { address: to } }] }, saveToSentItems: true })
+      });
+      if (r.getResponseCode() === 202) return;
+      console.warn('Graph sendMail refused: ' + r.getResponseCode() + ' ' + r.getContentText().slice(0, 300));
+    } catch (err) { console.warn('Graph sendMail failed: ' + err); }
+  }
+  MailApp.sendEmail({ to: to, subject: subject, body: body, name: FROM_NAME, replyTo: ALERT_TO });
+}
+
+/* run once from the editor after adding the Script Properties: sends a test reply to info@ itself */
+function testReply() { sendReply(ALERT_TO, 'ForgeHype test: reply from info@', 'If this arrived from info@forgehype.qa, the website replies are set up.'); }
 
 function doGet() { return out({ ok: true, service: 'ForgeHype leads' }); }
 
