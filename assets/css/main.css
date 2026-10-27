@@ -1480,3 +1480,6 @@ html.fm-lock,html.fm-lock body{overflow:hidden}
 /* Privacy Policy links in consent lines and the cookie notice: always underlined */
 .consent-lbl a,.consent a{display:inline;border-bottom:0;padding:0;color:#f4efe9;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .consent-lbl a:hover,.consent a:hover,.consent-lbl a:focus-visible,.consent a:focus-visible{color:var(--accent)}
+/* bigger tap area for carousel dots without changing how they look */
+.reel-dot,.team-dot{position:relative}
+.reel-dot::after,.team-dot::after{content:"";position:absolute;inset:-12px -6px}

@@ -861,14 +861,17 @@
   folds.forEach(d => {
     const h = d.querySelector('h2');
     d.classList.add('fold'); if (d.dataset.open === '1') d.classList.add('open');
-    const toggle = () => { if (!mq.matches) return; const o = d.classList.toggle('open'); h.setAttribute('aria-expanded', String(o)); };
+    const toggle = () => { if (!mq.matches) return; const o = d.classList.toggle('open'); btnOf(h).setAttribute('aria-expanded', String(o)); };
     h.addEventListener('click', toggle);
     h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   });
+  /* the toggle role sits on a span inside the heading, so the h2 keeps its heading role */
+  const btnOf = h => h.querySelector('.fold-t') || (() => { const t = document.createElement('span'); t.className = 'fold-t'; t.append(...h.childNodes); h.append(t); return t; })();
   const apply = () => folds.forEach(d => {
-    const h = d.querySelector('h2');
-    if (mq.matches) { h.setAttribute('role', 'button'); h.tabIndex = 0; h.setAttribute('aria-expanded', String(d.classList.contains('open'))); }
-    else { h.removeAttribute('role'); h.removeAttribute('tabindex'); h.removeAttribute('aria-expanded'); }
+    const h = d.querySelector('h2'), t = btnOf(h);
+    h.removeAttribute('role'); h.removeAttribute('tabindex'); h.removeAttribute('aria-expanded');
+    if (mq.matches) { t.setAttribute('role', 'button'); t.tabIndex = 0; t.setAttribute('aria-expanded', String(d.classList.contains('open'))); }
+    else { t.removeAttribute('role'); t.removeAttribute('tabindex'); t.removeAttribute('aria-expanded'); }
   });
   mq.addEventListener('change', apply); apply();
 })();
