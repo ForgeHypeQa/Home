@@ -588,6 +588,7 @@
     if (!LEADS_URL || fields.botcheck) return;
     const body = new URLSearchParams({ ...fields, page: location.pathname + location.hash });
     fetch(LEADS_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body }).catch(() => {});
+    if (window.fhTrack) window.fhTrack('generate_lead', { lead_source: fields.source || '' });
   };
   window.fhSendLead = sendLead;
   /* interests: dropdown with checkboxes */

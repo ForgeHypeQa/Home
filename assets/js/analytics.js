@@ -3,7 +3,7 @@
    With GA_ID empty, nothing loads and no banner shows.
    Google Analytics loads only after the visitor taps "Accept". The choice is remembered on that device. */
 (() => {
-  const GA_ID = '';
+  const GA_ID = location.hostname === 'forgehype.qa' ? 'G-0QGMWTDB54' : '';   // only the live domain is measured, never the test site
   if (!GA_ID) {
     document.addEventListener('click', e => { if (e.target.closest('[data-cookie-settings]')) e.preventDefault(); });
     return;
@@ -44,6 +44,16 @@
   if (!choice) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showBar); else showBar();
   }
+  /* lead actions as GA4 events (sent only if the visitor accepted) */
+  const ev = (name, params) => { if (window.gtag) gtag('event', name, params || {}); };
+  window.fhTrack = ev;
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href]'); if (!a) return;
+    const h = a.getAttribute('href');
+    if (h.startsWith('https://wa.me')) ev('whatsapp_click', { link_url: h });
+    else if (h.startsWith('tel:')) ev('phone_click', { link_url: h });
+    else if (h.startsWith('mailto:')) ev('email_click', { link_url: h });
+  });
   /* any link or button with data-cookie-settings reopens the choice */
   document.addEventListener('click', e => {
     if (e.target.closest('[data-cookie-settings]')) { e.preventDefault(); try { localStorage.removeItem(KEY); } catch (x) {} showBar(); }
