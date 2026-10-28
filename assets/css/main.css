@@ -1560,3 +1560,9 @@ html.fm-lock,html.fm-lock body{overflow:hidden}
 .btn-outline{background:transparent;color:var(--accent);border:2px solid var(--accent);font-weight:700;font-size:1.0625rem;padding:1rem 1.7rem}
 .btn-outline:hover,.btn-outline:focus-visible{background:rgba(217,104,46,.12);color:#f08a4f;border-color:#f08a4f}
 .pricing-sec .price-cta{color:#fff;margin-block-start:var(--s-5)}
+/* booking (desktop): heading + steps on the left, the two choices stacked on the right, both centred */
+@media (min-width:901px){
+  .book-sec .book{grid-template-columns:minmax(0,34rem) minmax(0,30rem);justify-content:center;align-items:center;gap:clamp(40px,6vw,110px)}
+  .book-sec .book-choose,.book-sec .book-choose.picked{grid-template-columns:1fr;width:100%;max-width:30rem;justify-self:center;align-self:center;gap:var(--s-4)}
+  .book-sec .choice{padding:var(--s-5) var(--s-6)}
+}
