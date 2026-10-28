@@ -44,13 +44,20 @@
     return true;
   };
 
+  /* the open "More about ForgeHype" fold belongs to the #more section, so it scrolls freely to its end */
+  const fold = document.getElementById('moreBody');
+  const bottomOf = s => {
+    const b = s.getBoundingClientRect().bottom;
+    return s.id === 'more' && fold && fold.classList.contains('open') ? Math.max(b, fold.getBoundingClientRect().bottom) : b;
+  };
+
   /* decide what a gesture in direction dir (1 = down, -1 = up) should do: a target y, or null for native */
   const plan = dir => {
     const cur = current(), i = secs.indexOf(cur);
     if (FREE.has(cur.id)) return null;
     const r = cur.getBoundingClientRect();
     if (dir > 0) {
-      if (r.bottom - innerHeight > 60) return null;                  // more of this section to read
+      if (bottomOf(cur) - innerHeight > 60) return null;                  // more of this section to read
       const next = secs[i + 1];
       if (!next || FREE.has(next.id)) return null;
       return anchorTop(next);
@@ -60,7 +67,7 @@
     const prev = secs[i - 1];
     if (!prev || FREE.has(prev.id)) return null;
     const pr = prev.getBoundingClientRect();
-    const prevTop = anchorTop(prev), prevEnd = Math.round(pr.bottom + scrollY - innerHeight);
+    const prevTop = anchorTop(prev), prevEnd = Math.round(bottomOf(prev) + scrollY - innerHeight);
     return Math.max(prevTop, prevEnd);                               // long section: land on its end
   };
 
