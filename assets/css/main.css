@@ -1571,3 +1571,7 @@ html.fm-lock,html.fm-lock body{overflow:hidden}
 .wa-float:not(.hidden),.scroll-arrows{opacity:.8}
 html.fl-dim .wa-float:not(.hidden),html.fl-dim .scroll-arrows{opacity:.4}
 .wa-float:not(.hidden):hover,.wa-float:not(.hidden):focus-visible,.scroll-arrows:hover,.scroll-arrows:focus-within{opacity:1}
+/* team section parked: section#team[hidden] stays in the HTML but is not shown */
+#team[hidden]{display:none}
+.more-play{display:grid;place-items:center;width:clamp(44px,4.4vw,58px);height:clamp(44px,4.4vw,58px);border-radius:50%;background:var(--accent);color:#fff;box-shadow:0 8px 18px -8px rgba(217,104,46,.7)}
+.more-play svg{width:55%;height:55%;margin-inline-start:6%}
