@@ -1566,3 +1566,8 @@ html.fm-lock,html.fm-lock body{overflow:hidden}
   .book-sec .book-choose,.book-sec .book-choose.picked{grid-template-columns:1fr;width:100%;max-width:30rem;justify-self:center;align-self:center;gap:var(--s-4)}
   .book-sec .choice{padding:var(--s-5) var(--s-6)}
 }
+/* floating buttons: 80% normally, 40% once the page has been still for 3 s (away from the top and footer), full on hover */
+.wa-float,.scroll-arrows{transition:opacity .6s ease,transform var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
+.wa-float:not(.hidden),.scroll-arrows{opacity:.8}
+html.fl-dim .wa-float:not(.hidden),html.fl-dim .scroll-arrows{opacity:.4}
+.wa-float:not(.hidden):hover,.wa-float:not(.hidden):focus-visible,.scroll-arrows:hover,.scroll-arrows:focus-within{opacity:1}

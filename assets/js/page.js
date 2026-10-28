@@ -140,3 +140,22 @@ document.querySelectorAll('.fq-btn').forEach(b => b.addEventListener('click', ()
   new MutationObserver(upd).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   upd();
 })();
+
+/* floating buttons (WhatsApp, up/down arrows): 80% while scrolling and at the top or footer, fade to 40% after 3 s still */
+(() => {
+  const html = document.documentElement;
+  let t = 0;
+  const atEdge = () => {
+    if (scrollY < 120) return true;
+    const foot = document.querySelector("footer");
+    const fh = foot ? foot.offsetHeight : 0;
+    return scrollY + innerHeight >= html.scrollHeight - Math.max(fh, 120);
+  };
+  const wake = () => {
+    html.classList.remove("fl-dim");
+    clearTimeout(t);
+    t = setTimeout(() => { if (!atEdge()) html.classList.add("fl-dim"); }, 3000);
+  };
+  ["scroll", "wheel", "touchmove", "keydown"].forEach(ev => addEventListener(ev, wake, { passive: true }));
+  wake();
+})();
