@@ -25,7 +25,7 @@
     const layout = () => {
       cards.forEach((c, i) => {
         let d = (i - cur + n) % n; if (d > n / 2) d -= n;
-        c.dataset.pos = Math.max(-2, Math.min(2, d));
+        c.dataset.pos = Math.abs(d) <= 2 ? d : (d < 0 ? -3 : 3);
         const on = d === 0;
         c.setAttribute('aria-hidden', String(!on));
         c.querySelectorAll('a, button').forEach(el => { el.tabIndex = on ? 0 : -1; });
