@@ -142,7 +142,12 @@
     DPR = Math.min(devicePixelRatio || 1, phone() ? 1.5 : 2);   // soft sprites: 1.5x is plenty on phones
     cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); cv.style.width = W + 'px'; cv.style.height = H + 'px';
     const portrait = phone() || innerHeight > innerWidth;
-    if (portrait) {                                          // resting place, phones and portrait tablets: between the navbar and the kicker
+    if (portrait && !phone()) {                              // portrait tablets: like desktop, on the right, centred on the headline block
+      const hb = host.getBoundingClientRect(), t = sec.querySelector('.hero-title'), btn = sec.querySelector('.btn-row');
+      const top = t ? t.getBoundingClientRect().top - hb.top : H * .35, bot = btn ? btn.getBoundingClientRect().bottom - hb.top : H * .6;
+      const pad = Math.max(24, (W - Math.min(W - 48, 1380)) / 2);
+      G1.R = Math.max(60, Math.min(W * .16, (bot - top) * .42)); G1.cx = W - pad - G1.R * 1.1; G1.cy = (top + bot) / 2;
+    } else if (portrait) {                                   // resting place, phones: between the navbar and the kicker
       const k = sec.querySelector('.kicker'), top = 104, bottom = (k ? k.offsetTop : H * .54) - 10;
       G1.R = Math.max(40, Math.min(W * .44, (bottom - top) / 2.45)); G1.cx = W / 2; G1.cy = top + G1.R * 1.05;
     } else { G1.R = Math.min(H * .30, W * .17); G1.cx = W - Math.max(46, (W - Math.min(W - 92, 1380)) / 2) - G1.R * 1.05; G1.cy = H * .44; }   // desktop: against the right edge of the content
