@@ -1579,3 +1579,5 @@ html.fl-dim .wa-float:not(.hidden),html.fl-dim .scroll-arrows{opacity:.4}
 .hero-static .hero-title .w1,.hero-static .hero-title .em{white-space:nowrap}
 @media (max-width:720px){.hero-static .hero-title{font-size:clamp(2.3rem,10.4vw,4.4rem)}}
 @media (min-width:721px){.hero-static .hero-title{font-size:clamp(3.4rem,1rem + 5.6vw,7rem)}}
+/* five reels: the outer pair waits off stage */
+.reel[data-pos="-2"]{--s:.82;z-index:1;opacity:0;pointer-events:none}
