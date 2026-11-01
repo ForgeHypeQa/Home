@@ -1575,3 +1575,7 @@ html.fl-dim .wa-float:not(.hidden),html.fl-dim .scroll-arrows{opacity:.4}
 #team[hidden]{display:none}
 .more-play{display:grid;place-items:center;width:clamp(44px,4.4vw,58px);height:clamp(44px,4.4vw,58px);border-radius:50%;background:var(--accent);color:#fff;box-shadow:0 8px 18px -8px rgba(217,104,46,.7)}
 .more-play svg{width:55%;height:55%;margin-inline-start:6%}
+/* "Be Seen. / Be Remembered.": each line stays on one line */
+.hero-static .hero-title .w1,.hero-static .hero-title .em{white-space:nowrap}
+@media (max-width:720px){.hero-static .hero-title{font-size:clamp(2.3rem,10.4vw,4.4rem)}}
+@media (min-width:721px){.hero-static .hero-title{font-size:clamp(3.4rem,1rem + 5.6vw,7rem)}}
