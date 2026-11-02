@@ -1582,3 +1582,9 @@ html.fl-dim .wa-float:not(.hidden),html.fl-dim .scroll-arrows{opacity:.4}
 /* five reels: the outer pair waits off stage */
 .reel[data-pos="-2"]{--s:.82;z-index:1;opacity:0;pointer-events:none}
 .reel[data-pos="3"],.reel[data-pos="-3"]{--s:.82;z-index:1;opacity:0;pointer-events:none}
+/* desktop reels: five across like the other carousels (centre 100%, neighbours 40%, outer pair 20%) */
+@media (min-width:1024px){
+  .reel[data-pos="2"],.reel[data-pos="-2"]{--r:0deg;--s:.7;opacity:.2;filter:saturate(.4) brightness(.65);z-index:1;pointer-events:auto;cursor:pointer}
+  .reel[data-pos="2"]{--x:181%}
+  .reel[data-pos="-2"]{--x:-181%}
+}
