@@ -199,7 +199,7 @@
   
   </div>
   <div class="wrap fixes-quiz"><a class="btn btn-primary fixes-quiz-cta" href="growth-score.html">Take the 2-minute Growth Score</a></div>
-  <a class="fix-skip" id="fixSkip" href="#about" aria-hidden="true" tabindex="-1">Skip to About <span aria-hidden="true">↓</span></a>
+  <a class="fix-skip" id="fixSkip" href="#about" aria-hidden="true" tabindex="-1"><b>Skip to About</b> <span aria-hidden="true">↓</span></a>
 </section>
 
 <!-- ============ 3. ABOUT (light) ============ -->
@@ -553,9 +553,13 @@
 <script>setTimeout(function(){if(!window.__forge){var h=document.querySelector(".hero-static.intro");if(h)h.classList.remove("intro")}},4000)</script>
 <script src="assets/js/analytics.js?v=2" defer></script>
 <script>
-/* Skip past the six problem cards: shown only while the stack is on screen */
+/* Skip past the six problem cards: shown only while the stack is on screen.
+   Scrolling down it jumps to About; scrolling up it jumps back above the cards. */
 (()=>{const s=document.getElementById('fixSkip'),f=document.getElementById('fixes');
 if(!s||!f||!('IntersectionObserver' in window))return;
+const lbl=s.querySelector('b'),arr=s.querySelector('span');let y=scrollY,up=false;
+const set=u=>{if(u===up)return;up=u;s.href=u?'#pains':'#about';lbl.textContent=u?'Skip back up':'Skip to About';arr.textContent=u?'↑':'↓'};
+addEventListener('scroll',()=>{const d=scrollY-y;if(Math.abs(d)>24){set(d<0);y=scrollY}},{passive:true});
 new IntersectionObserver(([e])=>{const on=e.isIntersecting;s.classList.toggle('on',on);
 if(on){s.removeAttribute('aria-hidden');s.tabIndex=0}else{s.setAttribute('aria-hidden','true');s.tabIndex=-1}},
 {rootMargin:'-35% 0px -35% 0px'}).observe(f);})();

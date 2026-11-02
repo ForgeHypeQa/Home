@@ -90,6 +90,7 @@
 .fix-skip{position:fixed;left:50%;bottom:24px;z-index:79;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;background:var(--panel-2);border:1px solid var(--line-strong);color:var(--text-primary);font:500 14px/1 var(--font-body);text-decoration:none;opacity:0;pointer-events:none;transform:translate(-50%,8px);transition:opacity 200ms var(--ease),transform 200ms var(--ease),border-color 160ms var(--ease)}
 .fix-skip.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
 .fix-skip:hover,.fix-skip:focus-visible{border-color:var(--accent)}
+.fix-skip b{font-weight:500}
 .fix-skip span{color:var(--accent)}
 @media (max-width:560px){.fix-skip{bottom:16px;height:44px}}
 @media (prefers-reduced-motion:reduce){.fix-skip{transition:none}}
