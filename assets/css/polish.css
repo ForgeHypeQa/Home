@@ -1,0 +1,87 @@
+/* ForgeHype · unslop polish layer (loads after main.css)
+   Direction: hot, exact, local. A forge at night. Ember hero + work rail carry the colour.
+   Polish method: unslop by Damir Sokolovsky (@heydamir), CC BY 4.0, github.com/heydamir/unslop */
+
+/* ---------- 2. Colour: one warm ramp for dark and cream ---------- */
+:root{
+  --canvas:#0b0908;--canvas-rgb:11,9,8;--canvas-2:#12100e;
+  --panel:#141110;--panel-2:#1c1815;
+  --text-primary:#efe9e1;--text-secondary:#aaa298;--text-tertiary:#8a827a;
+  --line:rgba(239,233,225,.08);--line-strong:rgba(239,233,225,.14);
+  --glass:#141110;--glass-2:#1c1815;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-pop:cubic-bezier(.22,1,.36,1); /* no overshoot */
+  --t-fast:160ms;--t-med:400ms;
+}
+.light{
+  --canvas:#f7f3ee;--canvas-rgb:247,243,238;--canvas-2:#efe9e1;--panel:#fdfbf8;--panel-2:#fdfbf8;
+  --text-primary:#1f1a15;--text-secondary:#5e554b;--text-tertiary:#7b7268;
+  --line:rgba(31,26,21,.08);--line-strong:rgba(31,26,21,.14);--glass:#fdfbf8;--glass-2:#fdfbf8;
+}
+/* the peach wash behind cream sections and the drifting glow go; cream stays a flat warm paper */
+.env-peach{display:none}
+.env-glow,.env-peach{animation:none}
+
+/* accent only where it means something: the hero tagline and the buttons.
+   Section headlines are one colour. */
+.t-h2 .em,.t-h2 .ln.em,.t-display .em{color:inherit}
+.pains-intro .six{color:inherit}
+
+/* frosted glass panels become plain raised surfaces with a hairline */
+[class*="glass"],.nav,.menu,.chip,.stack-media .n{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.stack-inner{background:var(--tint,#141110);border-color:var(--line-strong);box-shadow:0 24px 48px -32px rgba(0,0,0,.8)}
+.stack-inner::before{display:none}
+
+/* social icons in contact: one neutral tile, brand colour only on hover */
+.cv-icons a.si{filter:none;transition:opacity var(--t-fast) var(--ease)}
+
+
+.cv-icons a.si:hover,.cv-icons a.si:focus-visible{transform:none;filter:none;opacity:.8}
+
+/* ---------- 5. Type: weights 400 to 600, sentence case, no shouting ---------- */
+.t-display,.hero-words,.flipline,.closing-cta,.cl-word,.cl-mark,.pc-num,.sp-num,.q-score,
+.how-steps h3,.how-offer h3,.sp-body h3,.pc-col h4,.fm-title,.more-title,.q-q,.q-band,
+.choice .c-title,.price-cta-lead,.qvt-2,.pains-intro .pct{font-weight:600}
+.btn-primary,.btn-outl,.btn-outline,.price-cta,.compare-switch button,.fm-tab,.more-count,
+.more-state,.more-less,.ms-done,.orbit .core-step,.orbit .core-done,.pair .yes,
+.reel-caption strong,.compare-rows .txt .forge,.mq-grp li,.mq-b .mq-grp li{font-weight:500}
+
+/* tracked capitals become sentence case at normal tracking */
+.kicker,.cue,.trust .label,.scroll-hint,.svc-card .now,.orbit .lbl,.orbit .core-hint,
+.footer h2,.crumbs,.faq-cat,.se-step,.qvt-1,.qvt-2,.more-kicker,.hud .chip{
+  text-transform:none;letter-spacing:.01em}
+/* signature: the [ bracket label ] in Geist Mono, lowercase, section labels only */
+.mono-label{text-transform:lowercase;letter-spacing:.02em}
+
+/* small text never gets negative tracking */
+.btn,.kicker,.sub,.answer,.lowkey,p:not(.hero-words):not(.flipline):not(.closing-cta),li,label,summary{letter-spacing:normal}
+.stack-text .problem{letter-spacing:0}
+
+/* the giant MOST is one size step quieter */
+.pains-intro .pct{color:var(--accent)}
+
+/* ---------- 7. Details ---------- */
+.btn{border-radius:10px}
+.stack-text .tag,.stack-media .n{border-radius:6px}
+.stack-media .n{background:var(--panel-2)}
+
+/* ---------- 9. Motion: nothing loops unless it is live ---------- */
+.cue i::after,.orbit .core-hint,.map-pin,.map-pin i,
+.journey.loop .j-dot,.journey.loop .j-dot::before,.journey.loop .j-dot::after,.journey.loop .j-lbl,
+.orbit:not(.forged) .core,.orbit:not(.forged) .core::before,.orbit:not(.forged) .core::after,
+.orbit .node.lit circle,.orbit .node.next circle,.pc-skip b{animation:none!important}
+.journey.loop .j-dot::before,.journey.loop .j-dot::after,
+.orbit:not(.forged) .core::before,.orbit:not(.forged) .core::after,.map-pin i{opacity:0}
+
+/* hover is a colour or surface change, not a zoom */
+.tile:hover svg,.svc-card > a:hover .thumb,.work-card:hover img{transform:none}
+.stack-media img{transform:none;transition:none}
+
+/* social glyphs: neutral tile, glyph cut out in the page colour */
+.cv-icons a.si svg > rect:first-of-type{fill:var(--text-primary)}
+.cv-icons a.si svg > rect:not(:first-of-type)[fill]:not([fill="none"]){fill:var(--canvas)}
+.cv-icons a.si svg :is(path,circle,ellipse,polygon)[fill]:not([fill="none"]){fill:var(--canvas)}
+.cv-icons a.si svg [stroke]:not([stroke="none"]){stroke:var(--canvas)}
+
+/* stacked problem cards: a card on its way up is solid, so two cards' text never shows through each other */
+.stack-card.is-coming{opacity:1}
