@@ -199,6 +199,7 @@
   
   </div>
   <div class="wrap fixes-quiz"><a class="btn btn-primary fixes-quiz-cta" href="growth-score.html">Take the 2-minute Growth Score</a></div>
+  <a class="fix-skip" id="fixSkip" href="#about" aria-hidden="true" tabindex="-1">Skip to About <span aria-hidden="true">↓</span></a>
 </section>
 
 <!-- ============ 3. ABOUT (light) ============ -->
@@ -551,5 +552,13 @@
 <script src="assets/js/forge.js?v=12" defer></script>
 <script>setTimeout(function(){if(!window.__forge){var h=document.querySelector(".hero-static.intro");if(h)h.classList.remove("intro")}},4000)</script>
 <script src="assets/js/analytics.js?v=2" defer></script>
+<script>
+/* Skip past the six problem cards: shown only while the stack is on screen */
+(()=>{const s=document.getElementById('fixSkip'),f=document.getElementById('fixes');
+if(!s||!f||!('IntersectionObserver' in window))return;
+new IntersectionObserver(([e])=>{const on=e.isIntersecting;s.classList.toggle('on',on);
+if(on){s.removeAttribute('aria-hidden');s.tabIndex=0}else{s.setAttribute('aria-hidden','true');s.tabIndex=-1}},
+{rootMargin:'-35% 0px -35% 0px'}).observe(f);})();
+</script>
 </body>
 </html>
