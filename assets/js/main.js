@@ -708,14 +708,20 @@
   });
 })();
 
-/* reels: swipeable stack, muted by default, sound only on the front video */
+/* reels: swipeable stack, sound on by default on the front video only.
+   Browsers block sound until the visitor's first tap, click or key press, so until then
+   the front reel plays muted and gets its sound on that first interaction.
+   Turning sound off is remembered on this device. */
 (() => {
   const stage = document.getElementById('reelStage');
   if (!stage) return;
   const reels = [...stage.querySelectorAll('.reel')], n = reels.length;
   const dots = [...document.querySelectorAll('#reels .reel-dot')];
   const RM = matchMedia('(prefers-reduced-motion: reduce)');
-  let cur = 0, soundOn = false, inView = false;
+  let soundPref = true;
+  try { soundPref = localStorage.getItem('fhReelSound') !== 'off'; } catch (e) {}
+  let cur = 0, soundOn = soundPref, inView = false, blocked = false;
+  const audible = () => soundOn && !blocked;
 
   const layout = () => {
     reels.forEach((el, i) => {
@@ -724,11 +730,14 @@
       const on = d === 0, v = el.querySelector('video'), b = el.querySelector('.sound-toggle');
       el.classList.toggle('is-active', on);
       b.tabIndex = on ? 0 : -1;
-      b.setAttribute('aria-pressed', String(on && soundOn));
-      b.setAttribute('aria-label', soundOn ? 'Turn sound off' : 'Turn sound on');
+      b.setAttribute('aria-pressed', String(on && audible()));
+      b.setAttribute('aria-label', audible() ? 'Turn sound off' : 'Turn sound on');
       if (on) {
-        v.muted = !soundOn;
-        if (inView && (!RM.matches || soundOn)) v.play().catch(() => {});
+        v.muted = !audible(); v.volume = 1;
+        if (inView && (!RM.matches || audible())) v.play().catch(() => {
+          /* sound not allowed yet: play muted and wait for the first interaction */
+          if (!v.muted) { blocked = true; v.muted = true; v.play().catch(() => {}); layout(); }
+        });
       } else { v.muted = true; v.pause(); }
     });
     dots.forEach((d, i) => d.classList.toggle('on', i === cur));
@@ -739,7 +748,9 @@
     el.querySelector('.sound-toggle').addEventListener('click', e => {
       e.stopPropagation();
       if (i !== cur) return;
-      soundOn = !soundOn;
+      if (blocked) { blocked = false; soundOn = true; }   /* first tap on the button: turn the waiting sound on */
+      else soundOn = !soundOn;
+      try { localStorage.setItem('fhReelSound', soundOn ? 'on' : 'off'); } catch (err) {}
       const v = el.querySelector('video');
       v.muted = !soundOn; v.volume = 1;
       if (soundOn) v.play().catch(() => {});
@@ -780,6 +791,13 @@
     const v = reels[cur].querySelector('video');
     if (document.hidden) v.pause(); else if (inView) layout();
   });
+  /* first tap, click or key press anywhere: let the waiting sound play */
+  const unlock = e => {
+    if (e.target.closest && e.target.closest('.sound-toggle')) return;   /* the button handles its own tap */
+    ['pointerdown', 'keydown', 'touchend'].forEach(t => document.removeEventListener(t, unlock, true));
+    if (blocked && soundOn) { blocked = false; layout(); }
+  };
+  ['pointerdown', 'keydown', 'touchend'].forEach(t => document.addEventListener(t, unlock, true));
   layout();
 })();
 
