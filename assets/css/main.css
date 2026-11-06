@@ -1589,3 +1589,5 @@ html.fl-dim .wa-float:not(.hidden),html.fl-dim .scroll-arrows{opacity:.4}
   .reel[data-pos="-2"]{--x:-181%}
 }
 .reel[data-pos="4"],.reel[data-pos="-4"]{--s:.82;z-index:1;opacity:0;pointer-events:none}
+
+.reel[data-pos="5"],.reel[data-pos="-5"],.reel[data-pos="6"],.reel[data-pos="-6"]{--s:.82;z-index:1;opacity:0;pointer-events:none}
