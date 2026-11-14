@@ -708,97 +708,109 @@
   });
 })();
 
-/* reels: swipeable stack, sound on by default on the front video only.
-   Browsers block sound until the visitor's first tap, click or key press, so until then
-   the front reel plays muted and gets its sound on that first interaction.
+/* our works: numbered categories that open one at a time; each holds a swipeable reel stack.
+   Only the open category's front video plays. Sound is on by default on that video; browsers
+   block it until the visitor's first tap, click or key press, so until then it plays muted.
    Turning sound off is remembered on this device. */
 (() => {
-  const stage = document.getElementById('reelStage');
-  if (!stage) return;
-  const reels = [...stage.querySelectorAll('.reel')], n = reels.length;
-  const dots = [...document.querySelectorAll('#reels .reel-dot')];
+  const sec = document.getElementById('reels');
+  if (!sec || !sec.querySelector('.wk-list')) return;
   const RM = matchMedia('(prefers-reduced-motion: reduce)');
-  let soundPref = true;
-  try { soundPref = localStorage.getItem('fhReelSound') !== 'off'; } catch (e) {}
-  let cur = 0, soundOn = soundPref, inView = false, blocked = false;
+  let soundOn = true, blocked = false, inView = false;
+  try { soundOn = localStorage.getItem('fhReelSound') !== 'off'; } catch (e) {}
   const audible = () => soundOn && !blocked;
+  const cars = [];
 
-  const layout = () => {
+  sec.querySelectorAll('.reel-car').forEach(car => {
+    const stage = car.querySelector('.reel-stage');
+    const reels = [...stage.querySelectorAll('.reel')], n = reels.length;
+    const dots = [...car.querySelectorAll('.reel-dot')], name = car.querySelector('.reel-name');
+    const item = car.closest('.wk-item');
+    let cur = 0, moved = false;
+    const live = () => inView && item.classList.contains('is-open');
+    const layout = () => {
+      reels.forEach((el, i) => {
+        let d = (i - cur + n) % n; if (d > n / 2) d -= n;
+        el.dataset.pos = d;
+        const on = d === 0, v = el.querySelector('video'), b = el.querySelector('.sound-toggle');
+        el.classList.toggle('is-active', on);
+        b.tabIndex = on ? 0 : -1;
+        b.setAttribute('aria-pressed', String(on && audible()));
+        b.setAttribute('aria-label', audible() ? 'Turn sound off' : 'Turn sound on');
+        if (on && live()) {
+          v.muted = !audible(); v.volume = 1;
+          if (!RM.matches || audible()) v.play().catch(() => {
+            if (!v.muted) { blocked = true; v.muted = true; v.play().catch(() => {}); refresh(); }
+          });
+        } else { v.muted = true; v.pause(); }
+      });
+      dots.forEach((d, i) => d.classList.toggle('on', i === cur));
+      if (name) name.textContent = reels[cur].dataset.name || '';
+    };
+    const go = k => { cur = (cur + k + n) % n; layout(); };
     reels.forEach((el, i) => {
-      let d = (i - cur + n) % n; if (d > n / 2) d -= n;
-      el.dataset.pos = d;
-      const on = d === 0, v = el.querySelector('video'), b = el.querySelector('.sound-toggle');
-      el.classList.toggle('is-active', on);
-      b.tabIndex = on ? 0 : -1;
-      b.setAttribute('aria-pressed', String(on && audible()));
-      b.setAttribute('aria-label', audible() ? 'Turn sound off' : 'Turn sound on');
-      if (on) {
-        v.muted = !audible(); v.volume = 1;
-        if (inView && (!RM.matches || audible())) v.play().catch(() => {
-          /* sound not allowed yet: play muted and wait for the first interaction */
-          if (!v.muted) { blocked = true; v.muted = true; v.play().catch(() => {}); layout(); }
-        });
-      } else { v.muted = true; v.pause(); }
+      el.querySelector('.sound-toggle').addEventListener('click', e => {
+        e.stopPropagation();
+        if (i !== cur) return;
+        if (blocked) { blocked = false; soundOn = true; } else soundOn = !soundOn;
+        try { localStorage.setItem('fhReelSound', soundOn ? 'on' : 'off'); } catch (err) {}
+        refresh();
+      });
+      el.addEventListener('click', () => { if (!moved && i !== cur) { cur = i; layout(); } });
     });
-    dots.forEach((d, i) => d.classList.toggle('on', i === cur));
-  };
-  const go = k => { cur = (cur + k + n) % n; layout(); };
+    dots.forEach((d, i) => d.addEventListener('click', () => { cur = i; layout(); }));
+    car.querySelectorAll('.reel-arrow').forEach(b => b.addEventListener('click', () => go(+b.dataset.dir)));
+    stage.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    });
+    let sx = 0, sy = 0, down = false;
+    stage.addEventListener('pointerdown', e => { down = true; moved = false; sx = e.clientX; sy = e.clientY; });
+    stage.addEventListener('pointermove', e => {
+      if (down && Math.abs(e.clientX - sx) > 8 && Math.abs(e.clientX - sx) > Math.abs(e.clientY - sy)) moved = true;
+    });
+    stage.addEventListener('pointerup', e => {
+      if (!down) return; down = false;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
+      setTimeout(() => { moved = false; }, 0);
+    });
+    stage.addEventListener('pointercancel', () => { down = false; });
+    cars.push({ layout });
+  });
+  const refresh = () => cars.forEach(c => c.layout());
 
-  reels.forEach((el, i) => {
-    el.querySelector('.sound-toggle').addEventListener('click', e => {
-      e.stopPropagation();
-      if (i !== cur) return;
-      if (blocked) { blocked = false; soundOn = true; }   /* first tap on the button: turn the waiting sound on */
-      else soundOn = !soundOn;
-      try { localStorage.setItem('fhReelSound', soundOn ? 'on' : 'off'); } catch (err) {}
-      const v = el.querySelector('video');
-      v.muted = !soundOn; v.volume = 1;
-      if (soundOn) v.play().catch(() => {});
-      layout();
-    });
-    el.addEventListener('click', () => {
-      if (moved) return;
-      if (i !== cur) { cur = i; layout(); }
+  /* accordion: opening one category closes the others */
+  const items = [...sec.querySelectorAll('.wk-item')];
+  items.forEach(it => {
+    const btn = it.querySelector('.wk-btn');
+    btn.addEventListener('click', () => {
+      const open = !it.classList.contains('is-open');
+      items.forEach(o => {
+        const on = o === it && open;
+        o.classList.toggle('is-open', on);
+        o.querySelector('.wk-btn').setAttribute('aria-expanded', String(on));
+        o.querySelector('.wk-panel').inert = !on;
+      });
+      refresh();
+      if (open) setTimeout(() => {
+        const r = btn.getBoundingClientRect();
+        if (r.top < 100 || r.top > innerHeight * .4) window.scrollTo({ top: scrollY + r.top - 110, behavior: RM.matches ? 'auto' : 'smooth' });
+      }, 500);
     });
   });
-  dots.forEach((d, i) => d.addEventListener('click', () => { cur = i; layout(); }));
-  document.querySelectorAll('#reels .reel-arrow').forEach(b => b.addEventListener('click', () => go(+b.dataset.dir)));
-  stage.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
-  });
 
-  /* swipe: finger left shows the next reel, right the previous */
-  let sx = 0, sy = 0, down = false, moved = false;
-  stage.addEventListener('pointerdown', e => { down = true; moved = false; sx = e.clientX; sy = e.clientY; });
-  stage.addEventListener('pointermove', e => {
-    if (down && Math.abs(e.clientX - sx) > 8 && Math.abs(e.clientX - sx) > Math.abs(e.clientY - sy)) moved = true;
-  });
-  const end = e => {
-    if (!down) return; down = false;
-    const dx = e.clientX - sx, dy = e.clientY - sy;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
-    setTimeout(() => { moved = false; }, 0);
-  };
-  stage.addEventListener('pointerup', end);
-  stage.addEventListener('pointercancel', () => { down = false; });
-
-  new IntersectionObserver(([en]) => {
-    inView = en.isIntersecting;
-    if (inView) layout(); else reels.forEach(el => el.querySelector('video').pause());
-  }, { threshold: .35 }).observe(stage);
+  new IntersectionObserver(([en]) => { inView = en.isIntersecting; refresh(); }, { threshold: .15 }).observe(sec.querySelector('.wk-list'));
   document.addEventListener('visibilitychange', () => {
-    const v = reels[cur].querySelector('video');
-    if (document.hidden) v.pause(); else if (inView) layout();
+    if (document.hidden) sec.querySelectorAll('.reel video').forEach(v => v.pause()); else refresh();
   });
-  /* first tap, click or key press anywhere: let the waiting sound play */
   const unlock = e => {
-    if (e.target.closest && e.target.closest('.sound-toggle')) return;   /* the button handles its own tap */
+    if (e.target.closest && e.target.closest('.sound-toggle')) return;
     ['pointerdown', 'keydown', 'touchend'].forEach(t => document.removeEventListener(t, unlock, true));
-    if (blocked && soundOn) { blocked = false; layout(); }
+    if (blocked && soundOn) { blocked = false; refresh(); }
   };
   ['pointerdown', 'keydown', 'touchend'].forEach(t => document.addEventListener(t, unlock, true));
-  layout();
+  refresh();
 })();
 
 /* team: centred stack, glides one card every 3 s, swipe to move, pauses while touched or hovered */

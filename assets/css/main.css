@@ -1592,4 +1592,38 @@ html.fl-dim .wa-float:not(.hidden),html.fl-dim .scroll-arrows{opacity:.4}
 
 .reel[data-pos="5"],.reel[data-pos="-5"],.reel[data-pos="6"],.reel[data-pos="-6"]{--s:.82;z-index:1;opacity:0;pointer-events:none}
 
+.reels-head{margin-bottom:var(--s-4)}
+
 .reel[data-pos="7"],.reel[data-pos="-7"],.reel[data-pos="8"],.reel[data-pos="-8"]{--s:.82;z-index:1;opacity:0;pointer-events:none}
+
+/* ===== our works: one-open-at-a-time categories ===== */
+.works .reels-head{margin-bottom:var(--s-5)}
+.wk-list{max-width:1180px;margin-inline:auto;border-top:1px solid rgba(20,17,15,.14)}
+.wk-item{border-bottom:1px solid rgba(20,17,15,.14)}
+.wk-h{margin:0;font:inherit}
+.wk-btn{width:100%;display:flex;align-items:center;gap:clamp(12px,2vw,24px);padding:clamp(22px,3vw,34px) 4px;background:none;border:0;cursor:pointer;color:var(--text-primary);text-align:left;font:inherit}
+.wk-btn:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:8px}
+.wk-no{font-family:var(--font-mono);font-size:clamp(.8125rem,1.1vw,1rem);color:var(--accent);font-weight:500;flex:0 0 auto;align-self:center}
+.wk-t{flex:1;min-width:0;font-weight:700;font-size:clamp(1.75rem,3.6vw,3rem);line-height:1.05;letter-spacing:-.03em;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:.6em;row-gap:4px}
+.wk-sub{font-size:clamp(.875rem,1.2vw,1.125rem);font-weight:500;letter-spacing:0;color:var(--text-secondary)}
+.wk-n{font-size:clamp(.9375rem,1.2vw,1.125rem);color:var(--text-secondary);font-variant-numeric:tabular-nums;flex:0 0 auto}
+.wk-ic{position:relative;flex:0 0 auto;width:24px;height:24px;margin-inline-end:4px}
+.wk-ic::before,.wk-ic::after{content:"";position:absolute;left:0;top:11px;width:24px;height:2px;background:currentColor;border-radius:1px;transition:transform .35s var(--ease)}
+.wk-ic::after{transform:rotate(90deg)}
+.wk-item.is-open .wk-ic::after{transform:rotate(0deg)}
+.wk-item.is-open .wk-t{color:var(--accent)}
+.wk-btn:hover .wk-t{color:var(--accent)}
+.wk-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.wk-item.is-open .wk-panel{grid-template-rows:1fr}
+.wk-in{overflow:hidden;min-height:0}
+.wk-item.is-open .wk-in{padding-block:4px var(--s-6)}
+.reel-name{text-align:center;margin:var(--s-3) 0 0;font-weight:600;font-size:1.0625rem;color:var(--text-primary)}
+.wk-in .reel-nav{margin-block-start:var(--s-3)}
+@media (prefers-reduced-motion:reduce){.wk-panel,.wk-ic::before,.wk-ic::after{transition:none}}
+.wk-in .reel[data-pos="2"],.wk-in .reel[data-pos="-2"]{opacity:0;pointer-events:none}
+/* our works: cards 10% smaller so the group title and video name fit on screen */
+.wk-in .reel-stage{--cw:min(72vw,342px)}
+@media (min-width:900px){.wk-in .reel-stage{--cw:clamp(234px,21.6vw,324px)}}
+@media (min-width:1024px){.wk-in .reel-stage{--cw:clamp(216px,18vw,306px)}}
+.wk-logo{display:block;height:clamp(2.4rem,4.6vw,3.9rem);width:auto;margin-block:-4px}
+.wk-btn:hover .wk-logo,.wk-item.is-open .wk-logo{opacity:1}
