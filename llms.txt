@@ -18,6 +18,9 @@
 - [Brand identity and media kits](https://forgehype.qa/services/brand-media-kit.html): logo, colours, menus, catalogs, packaging and brand guide
 - [Monthly digital growth advisory](https://forgehype.qa/services/monthly-support.html): monthly review, research, clear next steps and team training
 
+## Work
+- [Veggify case study](https://forgehype.qa/work/veggify.html): Veggify (veggify.net), an online grocery store in Doha that ran on Shopify, rebuilt by ForgeHype. A 12-item order went from about 30 minutes to about 5 (AI ordering by text, voice or photo of a list). One admin now shows cost, expenses and net profit; prices update in bulk (up to 500 products at once); supplier purchase orders go out on WhatsApp; leads and abandoned carts are followed up; and Veggify exports and backs up its own data. 331 upgrades shipped between 29 October and 17 November 2026.
+
 ## More
 - [Key facts page](https://forgehype.qa/about-forgehype.html)
 - [FAQ](https://forgehype.qa/faq.html)

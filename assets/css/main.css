@@ -1627,3 +1627,9 @@ html.fl-dim .wa-float:not(.hidden),html.fl-dim .scroll-arrows{opacity:.4}
 @media (min-width:1024px){.wk-in .reel-stage{--cw:clamp(216px,18vw,306px)}}
 .wk-logo{display:block;height:clamp(2.4rem,4.6vw,3.9rem);width:auto;margin-block:-4px}
 .wk-btn:hover .wk-logo,.wk-item.is-open .wk-logo{opacity:1}
+/* success stories: case-study card is a link */
+.work-card.work-case{position:relative}
+.work-link{position:absolute;inset:0;z-index:5;border-radius:inherit}
+.work-link:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.work-more{display:block;margin-top:6px;color:var(--accent);font-weight:600}
+.wk-live{text-align:center;margin:var(--s-3) 0 0;font-size:.9375rem}
